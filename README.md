@@ -1,8 +1,5 @@
-Origin Bookmarks (2025.10.27 Updating...)
-<img width="889" height="70" alt="image" src="https://github.com/user-attachments/assets/248285cc-63aa-4a4a-b329-c8481396d813" />
-
 </head>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px Times; -webkit-text-stroke: #000000"><span class="s1"><strong>Origin Bookmarks </strong>(2025.10.27 Updating...)<strong></strong></span></h1>
+<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px Times; -webkit-text-stroke: #000000"><span class="s1"><strong>Origin Bookmarks </strong>(2025.11.22 Updating...)<strong></strong></span></h1>
 <p class="p2">&nbsp;</p>
 <p class="p2">- 오리진 공식 홈 (Origin Official Home) <a href="https://originworld.org/">Link</span></p>
 <p class="p2">- 오리진 공식 앱 (Origin Dapp) <a href="https://originworld.org/">Link</span></p>
