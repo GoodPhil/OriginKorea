@@ -88,4 +88,3 @@ origindefi.io/#/stake
 ```
 #
 </body>
-<img width="2076" height="3127" alt="image" src="https://github.com/user-attachments/assets/7c04db9a-9dda-496e-af88-249b17d63a74" />
