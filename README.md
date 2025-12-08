@@ -1,5 +1,5 @@
 </head>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px Times; -webkit-text-stroke: #000000"><span class="s1"><strong>Origin Bookmarks </strong>(2025.11.22 Updating...)<strong></strong></span></h1>
+<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px Times; -webkit-text-stroke: #000000"><span class="s1"><strong>Origin Bookmarks </strong>(2025.12.08 Updating...)<strong></strong></span></h1>
 <p class="p2">&nbsp;</p>
 <p class="p2">- 오리진 공식 홈 (Origin Official Home) <a href="https://originworld.org/">Link</span></p>
 <p class="p2">- 오리진 공식 앱 (Origin Dapp) <a href="https://originworld.org/">Link</span></p>
@@ -78,7 +78,6 @@
 <p class="p2">블록미디어 (CEX 냐 DEX 냐… 디지털 자산 지배할 거래소의 왕은?) <a href="https://www.blockmedia.co.kr/archives/921759#google_vignette">Link</span></p>
 <p class="p2">암호화폐 세금 규정 2027년 본격 시행 기관 유입 가속화 기대 <a href="https://news.zum.com/articles/99398575/%EC%95%94%ED%98%B8%ED%99%94%ED%8F%90-%EC%84%B8%EA%B8%88-%EA%B7%9C%EC%A0%95-carf-2027%EB%85%84-%EB%B3%B8%EA%B2%A9-%EC%8B%9C%ED%96%89-%EA%B8%B0%EA%B4%80-%EC%9C%A0%EC%9E%85-%EA%B0%80%EC%86%8D%ED%99%94-%EA%B8%B0%EB%8C%80">Link</span><br></p>
 <p class="p2"></span><br></p>
-<p class="p2"></span><br></p>
 <p class="p2"><b>* Defi Comparison</b><b></b></span></p>
 <p class="p2">Dexscreener Watchlist (덱스 스크린에서 Token 비교) <a href="https://dexscreener.com/watchlist/6iRoDDvcilBZKz5pRHbH">Link</span></p>
 <p class="p2">*** 오리진 공식 앱 - 저당권으로 바로가는 링크 복사 (오른쪽 버튼 <img width="38" alt="Copy" src="https://github.com/user-attachments/assets/3e2d6b1b-e0fd-4c5f-a8b7-644a13e38e67"/> 모양과 같은 아이콘 버튼 클릭하여 복사!!!)
@@ -86,8 +85,6 @@
 ```
 origindefi.io/#/stake
 ```
-
-<p class="p2"></span><br></p>
 <p class="p2"></span><br></p>
 <p class="p2"><b>* Other</b><b></b></span></p>
 <p class="p2">Whois Domain Information (OriginDefi.io 도메인 정보) <a href="https://www.whois.com/whois/origindefi.io">Link</span></p>
