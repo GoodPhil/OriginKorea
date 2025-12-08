@@ -80,14 +80,14 @@
 <p class="p2"></span><br></p>
 <p class="p2"><b>* Defi Comparison</b><b></b></span></p>
 <p class="p2">Dexscreener Watchlist (덱스 스크린에서 Token 비교) <a href="https://dexscreener.com/watchlist/6iRoDDvcilBZKz5pRHbH">Link</span></p>
+<p class="p2"></span><br></p>
+<p class="p2"><b>* Other</b><b></b></span></p>
+<p class="p2">Originworld.org Whois Domain Information (공식 홈페이지 도메인 정보) <a href="https://www.whois.com/whois/originworld.org">Link</span></p>
+<p class="p2">OriginDefi.io Whois Domain Information (공식 DApp 도메인 정보) <a href="https://www.whois.com/whois/origindefi.io">Link</span></p>
 <p class="p2">*** 오리진 공식 앱 - 저당권으로 바로가는 링크 복사 (오른쪽 버튼 <img width="38" alt="Copy" src="https://github.com/user-attachments/assets/3e2d6b1b-e0fd-4c5f-a8b7-644a13e38e67"/> 모양과 같은 아이콘 버튼 클릭하여 복사!!!)
 
 ```
 origindefi.io/#/stake
 ```
-<p class="p2"></span><br></p>
-<p class="p2"><b>* Other</b><b></b></span></p>
-<p class="p2">Originworld.org Whois Domain Information (공식 홈페이지 도메인 정보) <a href="https://www.whois.com/whois/originworld.org">Link</span></p>
-<p class="p2">OriginDefi.io Whois Domain Information (공식 DApp 도메인 정보) <a href="https://www.whois.com/whois/origindefi.io">Link</span></p>
 </span></p>
 </body>
