@@ -87,6 +87,7 @@ origindefi.io/#/stake
 ```
 <p class="p2"></span><br></p>
 <p class="p2"><b>* Other</b><b></b></span></p>
-<p class="p2">Whois Domain Information (OriginDefi.io 도메인 정보) <a href="https://www.whois.com/whois/origindefi.io">Link</span></p>
+<p class="p2">Originworld.org Whois Domain Information (공식 홈페이지 도메인 정보) <a href="https://www.whois.com/whois/originworld.org">Link</span></p>
+<p class="p2">OriginDefi.io Whois Domain Information (공식 DApp 도메인 정보) <a href="https://www.whois.com/whois/origindefi.io">Link</span></p>
 </span></p>
 </body>
