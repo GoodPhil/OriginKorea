@@ -1,26 +1,27 @@
 # OriginKorea 작업 목록
 
-## 현재 상태 (버전 377)
-- **Same 버전**: 377
+## 현재 상태 (버전 378)
+- **Same 버전**: 379
 - **GitHub 저장소**: https://github.com/GoodPhil/OriginKorea
 - **프로덕션 URL**: https://originkorea.vercel.app
 - **마지막 업데이트**: 2026.01.03
 
 ## 완료된 작업 ✅
+- [x] **계산기 600일 DAI 옵션 삭제** - 패키지에서 DAI 보상 옵션 제거
+- [x] **예상 수익 USD/KRW 동시 표시** - 스테이킹 수량, 예상 보상, 총 수령액에 달러와 원화 표시
+- [x] **기술 분석 페이지 성능 최적화** - 차트 컴포넌트 lazy loading 적용
+- [x] **Skeleton 컴포넌트 추가** - 차트 로딩 플레이스홀더
 - [x] **실제 컨트랙트 주소 설정** - LGNS Token, Staking, Treasury, Turbine 주소 설정
 - [x] **Web3 스마트 컨트랙트 연동** - ethers.js로 블록체인 데이터 조회
 - [x] **staking-data API 생성** - 토큰 정보, 수익률 조회
 - [x] **StakingInfo 컴포넌트 생성** - 실시간 블록체인 데이터 표시
 - [x] **계산기 페이지에 StakingInfo 통합**
 - [x] **온체인 분석 페이지 섹션 순서 수정** - 대규모 거래 → 토큰 공급 분석 → 홀더 분포 → 고래 활동 → 고래 지갑
-- [x] **OnChainAnalysis에 데이터 전달** - holdersData와 whaleTransactions 데이터 연결
 - [x] **투자 수익률 계산기 복원** - 계산기 페이지에 InvestmentCalculator 컴포넌트 추가
 - [x] **12개 기술 지표 추가** - MACD, 볼린저 밴드, 스토캐스틱, ATR, Williams %R, CCI, OBV, ADX, Ichimoku, Parabolic SAR
-- [x] **다크/라이트 모드 스타일 일관성 확인** (CSS 변수 사용)
+- [x] **다크/라이트 모드 스타일 일관성 확인**
 - [x] **이미지 lazy loading 최적화**
-- [x] **관리자 로그인 문제 해결** - AuthContext 단순화
-- [x] **SEO 메타태그 개선**
-- [x] **Footer 버전 v377 업데이트**
+- [x] **Footer 버전 v378 업데이트**
 
 ## 스마트 컨트랙트 주소 (Polygon)
 - **LGNS Token**: `0xeB51D9A39AD5EEF215dC0Bf39a8821ff804A0F01`
@@ -31,7 +32,7 @@
 ## 프로덕션 배포 상태
 - Vercel 자동 배포: 활성화됨 (GitHub 푸시 시 자동 배포)
 - 프로덕션 사이트: https://originkorea.vercel.app
-- 마지막 GitHub 푸시: v377 (2026.01.03)
+- 마지막 GitHub 푸시: v378 (2026.01.03)
 
 ## 분석 페이지 구성 - 총 12개 기술 지표
 1. **AI 분석 (/ai-analysis)**: AI 시장 심리, 공포/탐욕 지수, AI 예측

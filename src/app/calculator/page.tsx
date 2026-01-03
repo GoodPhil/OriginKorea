@@ -280,6 +280,14 @@ export default function CalculatorPage() {
         </div>
       </section>
 
+      {/* 1. Staking Info from Smart Contract - 스마트 컨트랙트 데이터 (FIRST) */}
+      <section className="py-8 px-4 relative z-10">
+        <div className="container mx-auto max-w-6xl">
+          <StakingInfo />
+        </div>
+      </section>
+
+      {/* 2. Staking Rewards Calculator - 스테이킹 수익 계산기 */}
       {/* Staking Packages */}
       <section className="py-6 sm:py-8 px-4 relative z-10">
         <div className="container mx-auto max-w-6xl">
@@ -704,13 +712,6 @@ export default function CalculatorPage() {
       <section className="py-12 px-4 relative z-10">
         <div className="container mx-auto max-w-6xl">
           <InvestmentCalculator />
-        </div>
-      </section>
-
-      {/* Staking Info from Smart Contract - 스마트 컨트랙트 데이터 */}
-      <section className="py-12 px-4 bg-card/20 relative z-10">
-        <div className="container mx-auto max-w-6xl">
-          <StakingInfo />
         </div>
       </section>
 

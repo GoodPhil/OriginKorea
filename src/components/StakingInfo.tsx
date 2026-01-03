@@ -391,22 +391,22 @@ export function StakingInfo() {
                 <div className="p-3 bg-secondary/30 rounded-lg text-center">
                   <Clock className="h-4 w-4 mx-auto mb-1 text-muted-foreground" />
                   <p className="text-xs text-muted-foreground">{t.per8Hours}</p>
-                  <p className="text-lg font-bold text-primary">{data.yields.per8Hours}%</p>
+                  <p className="text-lg font-bold text-primary">{data.yields.per8Hours.toFixed(4)}%</p>
                 </div>
                 <div className="p-3 bg-secondary/30 rounded-lg text-center">
                   <Percent className="h-4 w-4 mx-auto mb-1 text-muted-foreground" />
                   <p className="text-xs text-muted-foreground">{t.daily}</p>
-                  <p className="text-lg font-bold text-primary">{data.yields.daily}%</p>
+                  <p className="text-lg font-bold text-primary">{data.yields.daily.toFixed(4)}%</p>
                 </div>
                 <div className="p-3 bg-secondary/30 rounded-lg text-center">
                   <Percent className="h-4 w-4 mx-auto mb-1 text-muted-foreground" />
                   <p className="text-xs text-muted-foreground">{t.weekly}</p>
-                  <p className="text-lg font-bold text-primary">{data.yields.weekly}%</p>
+                  <p className="text-lg font-bold text-primary">{data.yields.weekly.toFixed(4)}%</p>
                 </div>
                 <div className="p-3 bg-secondary/30 rounded-lg text-center">
                   <Percent className="h-4 w-4 mx-auto mb-1 text-muted-foreground" />
                   <p className="text-xs text-muted-foreground">{t.monthly}</p>
-                  <p className="text-lg font-bold text-primary">{data.yields.monthly}%</p>
+                  <p className="text-lg font-bold text-primary">{data.yields.monthly.toFixed(4)}%</p>
                 </div>
                 <div className="p-3 bg-green-500/10 border border-green-500/20 rounded-lg text-center">
                   <Zap className="h-4 w-4 mx-auto mb-1 text-green-500" />

@@ -255,7 +255,7 @@ export function Footer() {
             {t.copyright} | {t.dataProvider}
           </p>
           <p className="text-[10px] text-muted-foreground/60 mb-2">{t.disclaimer}</p>
-          <p className="text-[10px] text-muted-foreground/40">v378 | 2026.01.03</p>
+          <p className="text-[10px] text-muted-foreground/40">v379 | 2026.01.03</p>
         </div>
       </div>
     </footer>
