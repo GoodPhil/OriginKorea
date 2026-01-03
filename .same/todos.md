@@ -1,12 +1,16 @@
 # OriginKorea 작업 목록
 
-## 현재 상태 (버전 374)
-- **Same 버전**: 374
+## 현재 상태 (버전 375)
+- **Same 버전**: 375
 - **GitHub 저장소**: https://github.com/GoodPhil/OriginKorea
 - **프로덕션 URL**: https://originkorea.vercel.app
 - **마지막 업데이트**: 2026.01.03
 
 ## 완료된 작업 ✅
+- [x] **Web3 스마트 컨트랙트 연동** - ethers.js로 블록체인 데이터 조회
+- [x] **staking-data API 생성** - 토큰 정보, 수익률 조회
+- [x] **StakingInfo 컴포넌트 생성** - 실시간 블록체인 데이터 표시
+- [x] **계산기 페이지에 StakingInfo 통합**
 - [x] **온체인 분석 페이지 섹션 순서 수정** - 대규모 거래 → 토큰 공급 분석 → 홀더 분포 → 고래 활동 → 고래 지갑
 - [x] **OnChainAnalysis에 데이터 전달** - holdersData와 whaleTransactions 데이터 연결
 - [x] **GitHub 푸시 완료** - v372 커밋 완료

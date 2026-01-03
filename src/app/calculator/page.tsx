@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { TrendingUp, Calendar, Coins, Calculator, RefreshCw, Zap, Clock, DollarSign, ChevronDown, Settings, ToggleLeft, ToggleRight } from 'lucide-react';
 import { InvestmentCalculator } from '@/components/InvestmentCalculator';
+import { StakingInfo } from '@/components/StakingInfo';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Navigation } from '@/components/Navigation';
 import { Footer } from '@/components/Footer';
@@ -735,6 +736,13 @@ export default function CalculatorPage() {
       <section className="py-12 px-4 relative z-10">
         <div className="container mx-auto max-w-6xl">
           <InvestmentCalculator />
+        </div>
+      </section>
+
+      {/* Staking Info from Smart Contract - 스마트 컨트랙트 데이터 */}
+      <section className="py-12 px-4 bg-card/20 relative z-10">
+        <div className="container mx-auto max-w-6xl">
+          <StakingInfo />
         </div>
       </section>
 
