@@ -1,13 +1,15 @@
 # OriginKorea 작업 목록
 
-## 현재 상태 (버전 372)
-- **Same 버전**: 372
+## 현재 상태 (버전 374)
+- **Same 버전**: 374
 - **GitHub 저장소**: https://github.com/GoodPhil/OriginKorea
 - **프로덕션 URL**: https://originkorea.vercel.app
 - **마지막 업데이트**: 2026.01.03
 
 ## 완료된 작업 ✅
-- [x] **온체인 분석 페이지 섹션 순서 변경** - 대규모 거래 추적 → 토큰 공급 분석 → 홀더 분포 → 고래 활동 → 고래 지갑
+- [x] **온체인 분석 페이지 섹션 순서 수정** - 대규모 거래 → 토큰 공급 분석 → 홀더 분포 → 고래 활동 → 고래 지갑
+- [x] **OnChainAnalysis에 데이터 전달** - holdersData와 whaleTransactions 데이터 연결
+- [x] **GitHub 푸시 완료** - v372 커밋 완료
 - [x] **투자 수익률 계산기 복원** - 계산기 페이지에 InvestmentCalculator 컴포넌트 추가
 - [x] **Ichimoku Cloud (일목균형표) 지표 추가** - 5개 라인 + 구름대 시각화
 - [x] **Parabolic SAR 지표 추가** - 추세 추종 및 손절 포인트
@@ -32,6 +34,7 @@
 ## 프로덕션 배포 상태
 - Vercel 자동 배포: 활성화됨 (GitHub 푸시 시 자동 배포)
 - 프로덕션 사이트: https://originkorea.vercel.app
+- 마지막 GitHub 푸시: v372 (2026.01.03)
 
 ## 분석 페이지 구성 - 총 12개 기술 지표
 1. **AI 분석 (/ai-analysis)**: AI 시장 심리, 공포/탐욕 지수, AI 예측
@@ -61,8 +64,7 @@
 2. **투자 수익률 계산기 (ROI)**: 실제 투자 내역 기반 스테이킹 복리 수익 및 ROI 계산
 
 ## 다음 작업 제안
-- [ ] GitHub에 변경사항 푸시
-- [ ] Vercel 배포 확인
-- [ ] 프로덕션에서 새 기능들 테스트
 - [ ] Money Flow Index (MFI) 지표 추가
 - [ ] Rate of Change (ROC) 지표 추가
+- [ ] 프로덕션에서 새 기능들 테스트
+- [ ] 기술 분석 페이지 성능 최적화 (차트 로딩 속도)
