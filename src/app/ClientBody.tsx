@@ -4,8 +4,6 @@ import { useEffect, useState } from 'react';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import { LanguageProvider } from '@/contexts/LanguageContext';
 import { AuthProvider } from '@/contexts/AuthContext';
-import { WalletProvider } from '@/contexts/WalletContext';
-import { Web3Provider } from '@/components/Web3Provider';
 import { AuthAlerts } from '@/components/AuthAlerts';
 import { MobileBottomNav } from '@/components/MobileBottomNav';
 import { PWAInstallPrompt } from '@/components/PWAInstallPrompt';
@@ -56,16 +54,12 @@ export default function ClientBody({ children }: { children: React.ReactNode }) 
     <ThemeProvider>
       <LanguageProvider>
         <AuthProvider>
-          <Web3Provider>
-            <WalletProvider>
-              <MaintenanceProvider>
-                <AuthAlerts />
-                {children}
-                <MobileBottomNav notificationCount={notificationCount} />
-                <PWAInstallPrompt />
-              </MaintenanceProvider>
-            </WalletProvider>
-          </Web3Provider>
+          <MaintenanceProvider>
+            <AuthAlerts />
+            {children}
+            <MobileBottomNav notificationCount={notificationCount} />
+            <PWAInstallPrompt />
+          </MaintenanceProvider>
         </AuthProvider>
       </LanguageProvider>
     </ThemeProvider>

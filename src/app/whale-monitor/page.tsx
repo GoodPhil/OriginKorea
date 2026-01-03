@@ -10,7 +10,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useAuth } from '@/contexts/AuthContext';
-import { PremiumFeatureGate } from '@/components/PremiumFeatureGate';
 import { WhaleHistoryChart } from '@/components/WhaleHistoryChart';
 import { OnChainAnalysis } from '@/components/OnChainAnalysis';
 import {
@@ -22,7 +21,6 @@ import {
   RefreshCw,
   AlertTriangle,
   ExternalLink,
-  Fish,
   Waves,
   Activity,
   Clock,
@@ -62,15 +60,6 @@ interface WhaleTransaction {
   blockNumber?: number;
 }
 
-interface WhaleWallet {
-  address: string;
-  totalIn: number;
-  totalOut: number;
-  netFlow: number;
-  transactionCount: number;
-  lastActivity: Date;
-}
-
 interface WhaleStats {
   totalTransactions: number;
   buyCount: number;
@@ -85,12 +74,12 @@ export default function WhaleMonitorPage() {
   const { language } = useLanguage();
   const { user, isLoading: authLoading } = useAuth();
   const [transactions, setTransactions] = useState<WhaleTransaction[]>([]);
-  const [wallets, setWallets] = useState<WhaleWallet[]>([]);
+
   const [stats, setStats] = useState<WhaleStats | null>(null);
   const [lgnsPrice, setLgnsPrice] = useState(6.36);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [activeSection, setActiveSection] = useState<'all' | 'transactions' | 'wallets'>('all');
+  const [activeSection, setActiveSection] = useState<'all' | 'transactions'>('all');
   const [alertsEnabled, setAlertsEnabled] = useState(false);
   const [dataSource, setDataSource] = useState<string>('loading');
   const [chartTimeframe, setChartTimeframe] = useState<'24h' | '7d' | '30d'>('7d');
@@ -228,13 +217,8 @@ export default function WhaleMonitorPage() {
           ...tx,
           timestamp: new Date(tx.timestamp),
         }));
-        const parsedWallets = data.wallets.map((w: WhaleWallet) => ({
-          ...w,
-          lastActivity: new Date(w.lastActivity),
-        }));
 
         setTransactions(parsedTransactions);
-        setWallets(parsedWallets);
         setStats(data.stats);
         setLgnsPrice(data.lgnsPrice || 6.36);
         setDataSource(data.source);
@@ -382,15 +366,6 @@ export default function WhaleMonitorPage() {
             >
               <Waves className="h-4 w-4" />
               {t.transactions}
-            </Button>
-            <Button
-              variant={activeSection === 'wallets' ? 'default' : 'outline'}
-              onClick={() => setActiveSection('wallets')}
-              className="gap-2 flex-shrink-0"
-              size="sm"
-            >
-              <Fish className="h-4 w-4" />
-              {t.wallets}
             </Button>
           </div>
 
@@ -645,98 +620,7 @@ export default function WhaleMonitorPage() {
                 </div>
               )}
 
-              {/* ========== SECTION 3: 고래 지갑 추적 (LAST) ========== */}
-              {(activeSection === 'all' || activeSection === 'wallets') && (
-                <PremiumFeatureGate
-                  requiredTier="silver"
-                  featureName={{ ko: '고래 지갑 추적', en: 'Whale Wallet Tracking' }}
-                  showPreview
-                  previewContent={
-                    <div className="space-y-3 opacity-50">
-                      {[1, 2, 3].map(i => (
-                        <div key={i} className="p-4 rounded-lg bg-secondary/30">
-                          <div className="h-4 w-48 bg-secondary rounded mb-2" />
-                          <div className="h-3 w-32 bg-secondary rounded" />
-                        </div>
-                      ))}
-                    </div>
-                  }
-                >
-                  <Card className="bg-card border-border/60 mb-8">
-                    <CardHeader className="pb-4">
-                      <div className="flex items-center gap-3">
-                        <div className="p-2 rounded-lg bg-gradient-to-br from-blue-500/20 to-cyan-500/20">
-                          <Fish className="h-5 w-5 text-blue-500" />
-                        </div>
-                        <div>
-                          <CardTitle className="text-lg flex items-center gap-2">
-                            {t.whaleTrackingTitle}
-                            <Badge variant="secondary" className="text-xs">
-                              {t.requiresWallet}
-                            </Badge>
-                          </CardTitle>
-                          <CardDescription>{t.whaleTrackingSubtitle}</CardDescription>
-                        </div>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-3">
-                        {wallets.map((wallet, index) => (
-                          <div key={wallet.address} className="p-4 rounded-lg bg-secondary/30 hover:bg-secondary/50 transition-all">
-                            <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-                              <div className="flex items-center gap-3 flex-1">
-                                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-500 to-blue-500 flex items-center justify-center text-white font-bold text-sm">
-                                  #{index + 1}
-                                </div>
-                                <div>
-                                  <code className="text-sm bg-secondary px-2 py-0.5 rounded font-mono">
-                                    {formatAddress(wallet.address)}
-                                  </code>
-                                  <p className="text-xs text-muted-foreground mt-1">
-                                    {t.lastActivity}: {formatTimeAgo(wallet.lastActivity)}
-                                  </p>
-                                </div>
-                              </div>
 
-                              <div className="flex-1 grid grid-cols-3 gap-2 text-sm">
-                                <div>
-                                  <p className="text-xs text-muted-foreground">{t.totalIn}</p>
-                                  <p className="font-medium text-green-500">{formatNumber(wallet.totalIn)}</p>
-                                </div>
-                                <div>
-                                  <p className="text-xs text-muted-foreground">{t.totalOut}</p>
-                                  <p className="font-medium text-red-500">{formatNumber(wallet.totalOut)}</p>
-                                </div>
-                                <div>
-                                  <p className="text-xs text-muted-foreground">{t.balance}</p>
-                                  <p className={`font-bold ${wallet.netFlow >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-                                    {wallet.netFlow >= 0 ? '+' : ''}{formatNumber(wallet.netFlow)}
-                                  </p>
-                                </div>
-                              </div>
-
-                              <div className="flex items-center gap-3">
-                                <div className="text-right">
-                                  <p className="text-xs text-muted-foreground">{t.txCount}</p>
-                                  <p className="font-medium">{wallet.transactionCount}</p>
-                                </div>
-                                <a
-                                  href={`https://polygonscan.com/address/${wallet.address}`}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="p-2 rounded-lg bg-secondary hover:bg-secondary/80 transition-colors"
-                                >
-                                  <ExternalLink className="h-4 w-4" />
-                                </a>
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </CardContent>
-                  </Card>
-                </PremiumFeatureGate>
-              )}
 
               {/* Alert Info */}
               {alertsEnabled && (

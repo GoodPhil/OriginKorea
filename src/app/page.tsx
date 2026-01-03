@@ -10,7 +10,7 @@ import { CompactAISentiment } from '@/components/CompactAISentiment';
 import { Navigation } from '@/components/Navigation';
 import { useMenuItems } from '@/hooks/useMenuItems';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { BookOpen, Users, Calculator, BookmarkCheck, Bell, BarChart3, GitCompare, Fish, Crown, Brain } from 'lucide-react';
+import { BookOpen, Users, Calculator, BookmarkCheck, Bell, BarChart3, GitCompare, Fish, Brain } from 'lucide-react';
 import { Footer } from '@/components/Footer';
 import { AnnouncementPopup } from '@/components/AnnouncementPopup';
 
@@ -24,7 +24,6 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Bell,
   GitCompare,
   Fish,
-  Crown,
   Brain,
 };
 

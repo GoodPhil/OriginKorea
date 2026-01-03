@@ -8,6 +8,7 @@ import {
   Flame, Snowflake, ArrowRight, Sparkles
 } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useExchangeRate, formatKRW } from '@/hooks/useExchangeRate';
 
 interface MarketData {
   priceUsd: string;
@@ -194,6 +195,7 @@ interface CompactAISentimentProps {
 
 export function CompactAISentiment({ data, loading }: CompactAISentimentProps) {
   const { language } = useLanguage();
+  const { rate: exchangeRate } = useExchangeRate();
 
   // State for price tracking and animation
   const [currentPrice, setCurrentPrice] = useState<number | null>(null);
@@ -365,6 +367,9 @@ export function CompactAISentiment({ data, loading }: CompactAISentimentProps) {
   const Icon = visuals.icon;
   const marketInsight = getMarketInsight(analysis.score, language);
 
+  // Calculate KRW price
+  const priceKRW = currentPrice !== null ? currentPrice * exchangeRate : null;
+
   return (
     <div className="block">
       <Card className={`relative overflow-hidden border-2 ${visuals.borderColor} bg-zinc-900/90 backdrop-blur-sm hover:bg-zinc-800/90 transition-all duration-300 cursor-pointer group`}>
@@ -430,34 +435,41 @@ export function CompactAISentiment({ data, loading }: CompactAISentimentProps) {
 
           {/* Price and Mini Chart Section */}
           <div className="mt-4 space-y-3">
-            {/* Current Price Display */}
+            {/* Current Price Display - BIGGER with KRW */}
             {currentPrice !== null && (
-              <div className={`p-2 rounded-lg bg-secondary/50 transition-all duration-300 ${
+              <div className={`p-3 rounded-lg bg-secondary/50 transition-all duration-300 ${
                 priceFlash === 'up' ? 'bg-green-500/20 ring-1 ring-green-500' :
                 priceFlash === 'down' ? 'bg-red-500/20 ring-1 ring-red-500' : ''
               }`}>
                 <div className="flex items-center justify-between">
-                  <span className="text-xs text-muted-foreground">
+                  <span className="text-sm text-muted-foreground font-medium">
                     {language === 'ko' ? '현재가' : 'Current Price'}
                   </span>
-                  <div className="flex items-center gap-2">
-                    <span className={`font-bold ${
-                      priceFlash === 'up' ? 'text-green-500' :
-                      priceFlash === 'down' ? 'text-red-500' : 'text-foreground'
-                    }`}>
-                      ${currentPrice.toFixed(4)}
-                    </span>
-                    {priceChange24h !== null && (
-                      <span className={`text-xs ${priceChange24h >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-                        {priceChange24h >= 0 ? '+' : ''}{priceChange24h.toFixed(2)}%
+                  <div className="text-right">
+                    <div className="flex items-center gap-2">
+                      <span className={`text-xl sm:text-2xl font-bold ${
+                        priceFlash === 'up' ? 'text-green-500' :
+                        priceFlash === 'down' ? 'text-red-500' : 'text-foreground'
+                      }`}>
+                        ${currentPrice.toFixed(4)}
                       </span>
+                      {priceChange24h !== null && (
+                        <span className={`text-sm font-medium ${priceChange24h >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                          {priceChange24h >= 0 ? '+' : ''}{priceChange24h.toFixed(2)}%
+                        </span>
+                      )}
+                    </div>
+                    {priceKRW !== null && (
+                      <div className="text-sm text-muted-foreground mt-0.5">
+                        ≈ {formatKRW(currentPrice, exchangeRate)}
+                      </div>
                     )}
                   </div>
                 </div>
               </div>
             )}
 
-            {/* Mini Sparkline Chart */}
+            {/* Mini Sparkline Chart - Trend Indicator */}
             {chartData.length > 0 && (
               <div className="p-2 rounded-lg bg-secondary/30">
                 <div className="flex items-center justify-between mb-1">
@@ -468,6 +480,9 @@ export function CompactAISentiment({ data, loading }: CompactAISentimentProps) {
                   </div>
                 </div>
                 <MiniSparkline data={chartData} color={visuals.chartColor} height={50} />
+                <p className="text-[9px] text-zinc-600 mt-1 text-center">
+                  {language === 'ko' ? '추세 기반 시뮬레이션' : 'Trend-based simulation'}
+                </p>
               </div>
             )}
           </div>

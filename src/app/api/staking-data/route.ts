@@ -1,5 +1,52 @@
 import { NextResponse } from 'next/server';
 import { ethers } from 'ethers';
+import { promises as fs } from 'fs';
+import path from 'path';
+
+// Load admin settings for manual data
+const SETTINGS_FILE = path.join(process.cwd(), '.same', 'staking-settings.json');
+
+interface ManualSettings {
+  contracts?: { key: string; address: string }[];
+  manualData?: {
+    treasury?: {
+      enabled: boolean;
+      balance: number;
+      balanceUSD: number;
+      backingRatio: number | null;
+    };
+    bond?: {
+      enabled: boolean;
+      bondPrice: number | null;
+      discount: number | null;
+      totalDebt: number | null;
+    };
+    liquidity?: {
+      enabled: boolean;
+      lgnsReserve: number | null;
+      usdcReserve: number | null;
+      totalLiquidityUSD: number | null;
+      priceFromLP: number | null;
+    };
+    yields?: {
+      enabled: boolean;
+      per8Hours: number;
+      daily: number;
+      weekly: number;
+      monthly: number;
+      estimatedAPY: string;
+    };
+  };
+}
+
+async function loadManualSettings(): Promise<ManualSettings | null> {
+  try {
+    const data = await fs.readFile(SETTINGS_FILE, 'utf-8');
+    return JSON.parse(data);
+  } catch {
+    return null;
+  }
+}
 
 // Contract Addresses on Polygon
 const LGNS_TOKEN_ADDRESS = '0xeB51D9A39AD5EEF215dC0Bf39a8821ff804A0F01';
@@ -276,6 +323,7 @@ async function getLiquidityData(provider: ethers.JsonRpcProvider) {
 export async function GET() {
   try {
     const provider = await getProvider();
+    const manualSettings = await loadManualSettings();
 
     // Get LGNS token data
     const lgnsContract = new ethers.Contract(LGNS_TOKEN_ADDRESS, ERC20_ABI, provider);
@@ -322,10 +370,18 @@ export async function GET() {
       getLiquidityData(provider),
     ]);
 
+    // Check if manual treasury data is enabled
+    const useManualTreasury = manualSettings?.manualData?.treasury?.enabled;
+    const useManualBond = manualSettings?.manualData?.bond?.enabled;
+    const useManualLiquidity = manualSettings?.manualData?.liquidity?.enabled;
+    const useManualYields = manualSettings?.manualData?.yields?.enabled;
+
     // Calculate Treasury backing ratio
-    const treasuryBackingRatio = treasuryBalance > 0 && marketCap > 0
-      ? (treasuryBalance * lgnsPrice / marketCap) * 100
-      : null;
+    const treasuryBackingRatio = useManualTreasury
+      ? manualSettings?.manualData?.treasury?.backingRatio ?? null
+      : (treasuryBalance > 0 && marketCap > 0
+        ? (treasuryBalance * lgnsPrice / marketCap) * 100
+        : null);
 
     // Calculate staking data
     const stakingData = {
@@ -338,9 +394,73 @@ export async function GET() {
     };
 
     // Calculate estimated APY based on LGNS DeFi system (0.2% per 8 hours compound)
-    const yieldPer8Hours = 0.2 / 100;
+    const yieldPer8Hours = useManualYields
+      ? (manualSettings?.manualData?.yields?.per8Hours ?? 0.2) / 100
+      : 0.2 / 100;
     const compoundsPerYear = 365 * 3;
     const estimatedAPY = (Math.pow(1 + yieldPer8Hours, compoundsPerYear) - 1) * 100;
+
+    // Treasury data - use manual if enabled
+    const treasuryResponse = useManualTreasury
+      ? {
+          address: TREASURY_ADDRESS,
+          balance: manualSettings?.manualData?.treasury?.balance ?? 0,
+          balanceUSD: manualSettings?.manualData?.treasury?.balanceUSD ?? 0,
+          backingRatio: manualSettings?.manualData?.treasury?.backingRatio ?? null,
+          isManual: true,
+        }
+      : {
+          address: TREASURY_ADDRESS,
+          balance: treasuryBalance,
+          balanceUSD: treasuryBalance * lgnsPrice,
+          backingRatio: treasuryBackingRatio,
+        };
+
+    // Turbine/Bond data - use manual if enabled
+    const turbineResponse = useManualBond
+      ? {
+          address: TURBINE_ADDRESS,
+          bondPrice: manualSettings?.manualData?.bond?.bondPrice ?? null,
+          discount: manualSettings?.manualData?.bond?.discount ?? null,
+          totalDebt: manualSettings?.manualData?.bond?.totalDebt ?? null,
+          isLive: true,
+          isManual: true,
+        }
+      : turbineData;
+
+    // Liquidity data - use manual if enabled
+    const liquidityResponse = useManualLiquidity
+      ? {
+          address: LP_ADDRESS,
+          lgnsReserve: manualSettings?.manualData?.liquidity?.lgnsReserve ?? null,
+          usdcReserve: manualSettings?.manualData?.liquidity?.usdcReserve ?? null,
+          totalLiquidityUSD: manualSettings?.manualData?.liquidity?.totalLiquidityUSD ?? null,
+          priceFromLP: manualSettings?.manualData?.liquidity?.priceFromLP ?? null,
+          totalSupply: null,
+          isLive: true,
+          isManual: true,
+        }
+      : liquidityData;
+
+    // Yields data - use manual if enabled
+    const yieldsResponse = useManualYields
+      ? {
+          per8Hours: manualSettings?.manualData?.yields?.per8Hours ?? 0.2,
+          daily: manualSettings?.manualData?.yields?.daily ?? 0.6,
+          weekly: manualSettings?.manualData?.yields?.weekly ?? 4.2,
+          monthly: manualSettings?.manualData?.yields?.monthly ?? 18,
+          estimatedAPY: manualSettings?.manualData?.yields?.estimatedAPY ?? estimatedAPY.toFixed(2),
+          compoundFrequency: '8 hours',
+          isManual: true,
+        }
+      : {
+          per8Hours: 0.2,
+          daily: 0.6,
+          weekly: 4.2,
+          monthly: 18,
+          estimatedAPY: estimatedAPY.toFixed(2),
+          compoundFrequency: '8 hours',
+        };
 
     const responseData = {
       success: true,
@@ -358,22 +478,10 @@ export async function GET() {
       },
       staking: stakingData,
       epoch: epochData,
-      treasury: {
-        address: TREASURY_ADDRESS,
-        balance: treasuryBalance,
-        balanceUSD: treasuryBalance * lgnsPrice,
-        backingRatio: treasuryBackingRatio,
-      },
-      turbine: turbineData,
-      liquidity: liquidityData,
-      yields: {
-        per8Hours: 0.2,
-        daily: 0.6,
-        weekly: 4.2,
-        monthly: 18,
-        estimatedAPY: estimatedAPY.toFixed(2),
-        compoundFrequency: '8 hours',
-      },
+      treasury: treasuryResponse,
+      turbine: turbineResponse,
+      liquidity: liquidityResponse,
+      yields: yieldsResponse,
       network: {
         name: 'Polygon',
         chainId: 137,

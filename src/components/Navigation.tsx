@@ -7,7 +7,7 @@ import { LanguageToggle } from '@/components/LanguageToggle';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import {
   Menu, X, BarChart3, BookOpen, BookmarkCheck, Calculator, Users,
-  Bell, GitCompare, Fish, Crown, Brain, ChevronDown, Wrench, Info
+  Bell, GitCompare, Fish, Brain, ChevronDown, Wrench, Info
 } from 'lucide-react';
 
 // Grouped menu structure
@@ -29,7 +29,7 @@ const menuGroups = {
       label: '도구',
       icon: Wrench,
       items: [
-        { key: 'calculator', href: '/calculator', label: '계산기', icon: Calculator, desc: '스테이킹 보상 계산' },
+        { key: 'calculator', href: '/calculator', label: '스테이킹', icon: Calculator, desc: '스테이킹 정보 및 계산' },
         { key: 'bookmarks', href: '/bookmarks', label: '참고링크', icon: BookmarkCheck, desc: '유용한 링크 모음' },
       ]
     },
@@ -48,7 +48,6 @@ const menuGroups = {
       icon: Users,
       items: [
         { key: 'community', href: '/community', label: '커뮤니티', icon: Users, desc: '포럼 및 이벤트' },
-        { key: 'membership', href: '/membership', label: '멤버십', icon: Crown, desc: '프리미엄 혜택' },
       ]
     },
   ],
@@ -69,7 +68,7 @@ const menuGroups = {
       label: 'Tools',
       icon: Wrench,
       items: [
-        { key: 'calculator', href: '/calculator', label: 'Calculator', icon: Calculator, desc: 'Staking rewards calc' },
+        { key: 'calculator', href: '/calculator', label: 'Staking', icon: Calculator, desc: 'Staking info & calc' },
         { key: 'bookmarks', href: '/bookmarks', label: 'Bookmarks', icon: BookmarkCheck, desc: 'Useful links' },
       ]
     },
@@ -88,7 +87,6 @@ const menuGroups = {
       icon: Users,
       items: [
         { key: 'community', href: '/community', label: 'Community', icon: Users, desc: 'Forum & events' },
-        { key: 'membership', href: '/membership', label: 'Membership', icon: Crown, desc: 'Premium benefits' },
       ]
     },
   ]

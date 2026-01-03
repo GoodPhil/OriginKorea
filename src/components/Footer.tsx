@@ -6,7 +6,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import {
   Twitter, Send, Github, Mail, ExternalLink,
   LogIn, UserPlus, LogOut, User, Shield,
-  BarChart3, Brain, Calculator, BookOpen, Users, Crown
+  BarChart3, Brain, Calculator, BookOpen, Users
 } from 'lucide-react';
 
 export function Footer() {
@@ -58,12 +58,12 @@ export function Footer() {
   ];
 
   const toolsLinks = language === 'ko' ? [
-    { name: '계산기', href: '/calculator', icon: Calculator },
+    { name: '스테이킹', href: '/calculator', icon: Calculator },
     { name: '문서', href: '/docs', icon: BookOpen },
     { name: '참고링크', href: '/bookmarks' },
     { name: '공지사항', href: '/announcements' },
   ] : [
-    { name: 'Calculator', href: '/calculator', icon: Calculator },
+    { name: 'Staking', href: '/calculator', icon: Calculator },
     { name: 'Docs', href: '/docs', icon: BookOpen },
     { name: 'Bookmarks', href: '/bookmarks' },
     { name: 'Announcements', href: '/announcements' },
@@ -78,10 +78,8 @@ export function Footer() {
 
   const communityLinks = language === 'ko' ? [
     { name: '커뮤니티', href: '/community', icon: Users },
-    { name: '멤버십', href: '/membership', icon: Crown },
   ] : [
     { name: 'Community', href: '/community', icon: Users },
-    { name: 'Membership', href: '/membership', icon: Crown },
   ];
 
   const socialLinks = [
@@ -255,7 +253,7 @@ export function Footer() {
             {t.copyright} | {t.dataProvider}
           </p>
           <p className="text-[10px] text-muted-foreground/60 mb-2">{t.disclaimer}</p>
-          <p className="text-[10px] text-muted-foreground/40">v384 | 2026.01.03</p>
+          <p className="text-[10px] text-muted-foreground/40">v395 | 2026.01.03</p>
         </div>
       </div>
     </footer>

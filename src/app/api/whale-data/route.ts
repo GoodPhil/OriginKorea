@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 
-// LGNS Token Contract Address on Polygon
-const LGNS_CONTRACT = '0x39aB6574c289c3Ae4d88500eEc792AB5B947A5Eb';
+// LGNS Token Contract Address on Polygon (correct address)
+const LGNS_CONTRACT = '0xeB51D9A39AD5EEF215dC0Bf39a8821ff804A0F01';
 const POLYGONSCAN_API_KEY = process.env.POLYGONSCAN_API_KEY || '';
 const POLYGONSCAN_API_URL = 'https://api.polygonscan.com/api';
 
@@ -63,7 +63,7 @@ const CACHE_TTL = 60000; // 1 minute cache
 async function fetchLGNSPrice(): Promise<number> {
   try {
     const response = await fetch(
-      'https://api.dexscreener.com/latest/dex/tokens/0x39aB6574c289c3Ae4d88500eEc792AB5B947A5Eb',
+      'https://api.dexscreener.com/latest/dex/tokens/0xeB51D9A39AD5EEF215dC0Bf39a8821ff804A0F01',
       { next: { revalidate: 60 } }
     );
     const data = await response.json();

@@ -35,8 +35,8 @@ export default function CalculatorPage() {
   const texts = {
     ko: {
       back: '홈으로',
-      title: '스테이킹 계산기',
-      heroTitle: '스테이킹 수익 계산기',
+      title: '스테이킹',
+      heroTitle: '스테이킹',
       heroSubtitle: '복리 수익을 정확하게 계산하고 최적의 스테이킹 전략을 수립하세요',
       stakingPackages: '스테이킹 패키지',
       stakingPackagesDesc: '기간별 최적화된 스테이킹 옵션을 선택하세요',

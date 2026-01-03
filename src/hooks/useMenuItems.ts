@@ -23,18 +23,17 @@ interface MenuData {
 }
 
 // Default menu items - New order:
-// AI 분석, 분석, 비교 분석, 추적, 계산기, 참고링크, 문서, 커뮤니티, 멤버십, 공지
+// AI 분석, 분석, 비교 분석, 추적, 스테이킹, 참고링크, 문서, 커뮤니티, 공지
 const defaultMenuItems: MenuItem[] = [
   { id: 'menu-1', key: 'ai-analysis', href: '/ai-analysis', label_ko: 'AI 분석', label_en: 'AI Analysis', icon: 'Brain', sort_order: 1, is_visible: true, show_in_nav: true, show_in_footer: true },
   { id: 'menu-2', key: 'analysis', href: '/analysis', label_ko: '기술 분석', label_en: 'Technical Analysis', icon: 'BarChart3', sort_order: 2, is_visible: true, show_in_nav: true, show_in_footer: true },
   { id: 'menu-3', key: 'comparison', href: '/comparison', label_ko: '비교 분석', label_en: 'Comparison', icon: 'GitCompare', sort_order: 3, is_visible: true, show_in_nav: true, show_in_footer: true },
   { id: 'menu-4', key: 'whale-monitor', href: '/whale-monitor', label_ko: '온체인 분석', label_en: 'On-Chain Analysis', icon: 'Fish', sort_order: 4, is_visible: true, show_in_nav: true, show_in_footer: true },
-  { id: 'menu-5', key: 'calculator', href: '/calculator', label_ko: '계산기', label_en: 'Calculator', icon: 'Calculator', sort_order: 5, is_visible: true, show_in_nav: true, show_in_footer: true },
+  { id: 'menu-5', key: 'staking', href: '/calculator', label_ko: '스테이킹', label_en: 'Staking', icon: 'Calculator', sort_order: 5, is_visible: true, show_in_nav: true, show_in_footer: true },
   { id: 'menu-6', key: 'bookmarks', href: '/bookmarks', label_ko: '참고링크', label_en: 'Bookmarks', icon: 'BookmarkCheck', sort_order: 6, is_visible: true, show_in_nav: true, show_in_footer: true },
   { id: 'menu-7', key: 'docs', href: '/docs', label_ko: '문서', label_en: 'Docs', icon: 'BookOpen', sort_order: 7, is_visible: true, show_in_nav: true, show_in_footer: true },
   { id: 'menu-8', key: 'community', href: '/community', label_ko: '커뮤니티', label_en: 'Community', icon: 'Users', sort_order: 8, is_visible: true, show_in_nav: true, show_in_footer: true },
-  { id: 'menu-9', key: 'membership', href: '/membership', label_ko: '멤버십', label_en: 'Membership', icon: 'Crown', sort_order: 9, is_visible: true, show_in_nav: true, show_in_footer: true },
-  { id: 'menu-10', key: 'announcements', href: '/announcements', label_ko: '공지', label_en: 'Announcements', icon: 'Bell', sort_order: 10, is_visible: true, show_in_nav: true, show_in_footer: true },
+  { id: 'menu-9', key: 'announcements', href: '/announcements', label_ko: '공지', label_en: 'Announcements', icon: 'Bell', sort_order: 9, is_visible: true, show_in_nav: true, show_in_footer: true },
 ];
 
 // Load from localStorage
@@ -161,14 +160,17 @@ export function useMenuItems() {
     }
   }, [fetchMenuItems, menuItems]);
 
-  // Get navigation menu items (visible and show_in_nav)
+  // Deprecated items to filter out (removed features)
+  const deprecatedItems = ['membership', 'wallet', 'portfolio'];
+
+  // Get navigation menu items (visible and show_in_nav, excluding deprecated)
   const navItems = menuItems
-    .filter((item) => item.is_visible && item.show_in_nav)
+    .filter((item) => item.is_visible && item.show_in_nav && !deprecatedItems.includes(item.key))
     .sort((a, b) => a.sort_order - b.sort_order);
 
-  // Get footer menu items (visible and show_in_footer)
+  // Get footer menu items (visible and show_in_footer, excluding deprecated)
   const footerItems = menuItems
-    .filter((item) => item.is_visible && item.show_in_footer)
+    .filter((item) => item.is_visible && item.show_in_footer && !deprecatedItems.includes(item.key))
     .sort((a, b) => a.sort_order - b.sort_order);
 
   // Get all items for admin

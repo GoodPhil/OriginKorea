@@ -18,11 +18,9 @@ import {
   CheckCircle,
   Database,
   Timer,
-  Wallet,
   Shield,
   Droplets,
   ArrowRightLeft,
-  TrendingDown,
   Banknote,
 } from 'lucide-react';
 
@@ -110,9 +108,6 @@ export function StakingInfo() {
   const [error, setError] = useState<string | null>(null);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [countdown, setCountdown] = useState<number>(0);
-  const [walletAddress, setWalletAddress] = useState<string | null>(null);
-  const [walletBalance, setWalletBalance] = useState<number | null>(null);
-  const [isConnecting, setIsConnecting] = useState(false);
 
   const texts = {
     ko: {
@@ -128,7 +123,7 @@ export function StakingInfo() {
       treasuryInfo: '트레저리 정보',
       bondInfo: '본드 정보',
       liquidityInfo: '유동성 풀',
-      portfolioInfo: '내 포트폴리오',
+      contractAddresses: '컨트랙트 주소',
       totalSupply: '총 공급량',
       currentPrice: '현재 가격',
       marketCap: '시가총액',
@@ -163,17 +158,13 @@ export function StakingInfo() {
       error: '데이터 조회 실패',
       retry: '재시도',
       notConfigured: '스테이킹 데이터를 조회할 수 없습니다',
-      connectWallet: '지갑 연결',
-      connecting: '연결 중...',
-      disconnect: '연결 해제',
-      myBalance: '내 잔액',
-      myStaked: '스테이킹 중',
-      walletNotConnected: '지갑을 연결하여 포트폴리오를 확인하세요',
       hours: '시간',
       minutes: '분',
       seconds: '초',
       nextRebase: '다음 리베이스까지',
       epochNumber: '에포크',
+      noData: '데이터 없음',
+      dataUnavailable: '컨트랙트에서 데이터를 가져올 수 없습니다',
     },
     en: {
       title: 'Staking Information',
@@ -188,7 +179,7 @@ export function StakingInfo() {
       treasuryInfo: 'Treasury Info',
       bondInfo: 'Bond Info',
       liquidityInfo: 'Liquidity Pool',
-      portfolioInfo: 'My Portfolio',
+      contractAddresses: 'Contract Addresses',
       totalSupply: 'Total Supply',
       currentPrice: 'Current Price',
       marketCap: 'Market Cap',
@@ -223,17 +214,13 @@ export function StakingInfo() {
       error: 'Failed to load data',
       retry: 'Retry',
       notConfigured: 'Unable to fetch staking data',
-      connectWallet: 'Connect Wallet',
-      connecting: 'Connecting...',
-      disconnect: 'Disconnect',
-      myBalance: 'My Balance',
-      myStaked: 'My Staked',
-      walletNotConnected: 'Connect wallet to view portfolio',
       hours: 'h',
       minutes: 'm',
       seconds: 's',
       nextRebase: 'Next Rebase In',
       epochNumber: 'Epoch',
+      noData: 'No Data',
+      dataUnavailable: 'Cannot fetch data from contract',
     },
   };
 
@@ -304,7 +291,6 @@ export function StakingInfo() {
     const timer = setInterval(() => {
       setCountdown((prev) => {
         if (prev <= 1) {
-          // Refresh data when countdown reaches 0
           fetchData();
           return 0;
         }
@@ -315,44 +301,6 @@ export function StakingInfo() {
     return () => clearInterval(timer);
   }, [countdown, fetchData]);
 
-  // Connect wallet function
-  const connectWallet = async () => {
-    const win = window as Window & { ethereum?: { request: (args: { method: string; params?: unknown[] }) => Promise<unknown> } };
-    if (typeof window === 'undefined' || !win.ethereum) {
-      alert(language === 'ko' ? 'MetaMask를 설치해주세요' : 'Please install MetaMask');
-      return;
-    }
-
-    setIsConnecting(true);
-    try {
-      const ethereum = win.ethereum;
-      const accountsResult = await ethereum.request({ method: 'eth_requestAccounts' });
-      const accounts = accountsResult as string[];
-      if (accounts && accounts[0]) {
-        setWalletAddress(accounts[0]);
-        // Fetch wallet balance
-        const balanceHex = await ethereum.request({
-          method: 'eth_call',
-          params: [{
-            to: data?.contracts?.lgnsToken,
-            data: `0x70a08231000000000000000000000000${accounts[0].slice(2)}`,
-          }, 'latest'],
-        });
-        const balance = parseInt(balanceHex as string, 16) / 1e18;
-        setWalletBalance(balance);
-      }
-    } catch (err) {
-      console.error('Failed to connect wallet:', err);
-    } finally {
-      setIsConnecting(false);
-    }
-  };
-
-  const disconnectWallet = () => {
-    setWalletAddress(null);
-    setWalletBalance(null);
-  };
-
   const formatNumber = (num: number, decimals = 2) => {
     if (num >= 1000000000) return `${(num / 1000000000).toFixed(decimals)}B`;
     if (num >= 1000000) return `${(num / 1000000).toFixed(decimals)}M`;
@@ -360,8 +308,8 @@ export function StakingInfo() {
     return num.toLocaleString(undefined, { maximumFractionDigits: decimals });
   };
 
-  const formatAddress = (address: string) => {
-    return `${address.slice(0, 6)}...${address.slice(-4)}`;
+  const formatAddress = (addr: string) => {
+    return `${addr.slice(0, 6)}...${addr.slice(-4)}`;
   };
 
   const formatCountdown = (seconds: number) => {
@@ -431,7 +379,7 @@ export function StakingInfo() {
 
       {data && (
         <>
-          {/* Rebase Countdown - PROMINENT */}
+          {/* Rebase Countdown */}
           <Card className="bg-gradient-to-r from-amber-500/10 to-orange-500/10 border-amber-500/30">
             <CardHeader className="pb-3">
               <CardTitle className="text-lg flex items-center gap-2">
@@ -485,7 +433,7 @@ export function StakingInfo() {
                 <div className="p-3 bg-secondary/30 rounded-lg">
                   <p className="text-xs text-muted-foreground mb-1">{t.currentPrice}</p>
                   <p className="text-lg font-bold text-primary">${data.token.price.toFixed(4)}</p>
-                  {data.token.priceChange24h && (
+                  {data.token.priceChange24h !== undefined && (
                     <p className={`text-xs ${data.token.priceChange24h >= 0 ? 'text-green-500' : 'text-red-500'}`}>
                       {data.token.priceChange24h >= 0 ? '+' : ''}{data.token.priceChange24h.toFixed(2)}%
                     </p>
@@ -543,7 +491,10 @@ export function StakingInfo() {
                 <div className="p-4 bg-amber-500/10 border border-amber-500/30 rounded-lg">
                   <div className="flex items-start gap-3">
                     <AlertCircle className="h-5 w-5 text-amber-500 flex-shrink-0 mt-0.5" />
-                    <p className="text-sm text-muted-foreground">{t.notConfigured}</p>
+                    <div>
+                      <p className="text-sm font-medium text-amber-500">{t.noData}</p>
+                      <p className="text-sm text-muted-foreground">{t.dataUnavailable}</p>
+                    </div>
                   </div>
                 </div>
               )}
@@ -561,18 +512,25 @@ export function StakingInfo() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-3">
-                  <div className="p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg">
-                    <p className="text-xs text-muted-foreground mb-1">{t.treasuryBalance}</p>
-                    <p className="text-xl font-bold text-blue-500">{formatNumber(data.treasury?.balance || 0)} LGNS</p>
-                    <p className="text-sm text-muted-foreground">${formatNumber(data.treasury?.balanceUSD || 0)}</p>
+                {data.treasury && data.treasury.balance > 0 ? (
+                  <div className="space-y-3">
+                    <div className="p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg">
+                      <p className="text-xs text-muted-foreground mb-1">{t.treasuryBalance}</p>
+                      <p className="text-xl font-bold text-blue-500">{formatNumber(data.treasury.balance)} LGNS</p>
+                      <p className="text-sm text-muted-foreground">${formatNumber(data.treasury.balanceUSD)}</p>
+                    </div>
+                    <div className="p-3 bg-secondary/30 rounded-lg">
+                      <p className="text-xs text-muted-foreground mb-1">{t.backingRatio}</p>
+                      <p className="text-xl font-bold">{data.treasury.backingRatio?.toFixed(2) || 'N/A'}%</p>
+                      <p className="text-xs text-muted-foreground">{language === 'ko' ? '시가총액 대비' : 'of Market Cap'}</p>
+                    </div>
                   </div>
-                  <div className="p-3 bg-secondary/30 rounded-lg">
-                    <p className="text-xs text-muted-foreground mb-1">{t.backingRatio}</p>
-                    <p className="text-xl font-bold">{data.treasury?.backingRatio?.toFixed(2) || 'N/A'}%</p>
-                    <p className="text-xs text-muted-foreground">{language === 'ko' ? '시가총액 대비' : 'of Market Cap'}</p>
+                ) : (
+                  <div className="p-4 bg-secondary/20 rounded-lg text-center">
+                    <AlertCircle className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
+                    <p className="text-sm text-muted-foreground">{t.noData}</p>
                   </div>
-                </div>
+                )}
               </CardContent>
             </Card>
 
@@ -588,24 +546,29 @@ export function StakingInfo() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-3">
-                  <div className="p-3 bg-purple-500/10 border border-purple-500/20 rounded-lg">
-                    <p className="text-xs text-muted-foreground mb-1">{t.bondDiscount}</p>
-                    <p className="text-xl font-bold text-purple-500">
-                      {data.turbine?.discount != null ? `${data.turbine.discount.toFixed(2)}%` : 'N/A'}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      {data.turbine?.bondPrice != null ? `${data.turbine.bondPrice.toFixed(4)}` : '-'}
-                    </p>
+                {data.turbine?.discount != null ? (
+                  <div className="space-y-3">
+                    <div className="p-3 bg-purple-500/10 border border-purple-500/20 rounded-lg">
+                      <p className="text-xs text-muted-foreground mb-1">{t.bondDiscount}</p>
+                      <p className="text-xl font-bold text-purple-500">{data.turbine.discount.toFixed(2)}%</p>
+                      <p className="text-xs text-muted-foreground">
+                        {data.turbine.bondPrice != null ? `$${data.turbine.bondPrice.toFixed(4)}` : '-'}
+                      </p>
+                    </div>
+                    <div className="p-3 bg-secondary/30 rounded-lg">
+                      <p className="text-xs text-muted-foreground mb-1">{t.totalDebt}</p>
+                      <p className="text-xl font-bold">
+                        {data.turbine.totalDebt != null ? formatNumber(data.turbine.totalDebt) : 'N/A'}
+                      </p>
+                      <p className="text-xs text-muted-foreground">LGNS</p>
+                    </div>
                   </div>
-                  <div className="p-3 bg-secondary/30 rounded-lg">
-                    <p className="text-xs text-muted-foreground mb-1">{t.totalDebt}</p>
-                    <p className="text-xl font-bold">
-                      {data.turbine?.totalDebt != null ? formatNumber(data.turbine.totalDebt) : 'N/A'}
-                    </p>
-                    <p className="text-xs text-muted-foreground">LGNS</p>
+                ) : (
+                  <div className="p-4 bg-secondary/20 rounded-lg text-center">
+                    <AlertCircle className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
+                    <p className="text-sm text-muted-foreground">{t.noData}</p>
                   </div>
-                </div>
+                )}
               </CardContent>
             </Card>
           </div>
@@ -622,80 +585,31 @@ export function StakingInfo() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                <div className="p-3 bg-cyan-500/10 border border-cyan-500/20 rounded-lg">
-                  <p className="text-xs text-muted-foreground mb-1">{t.totalLiquidity}</p>
-                  <p className="text-lg font-bold text-cyan-500">
-                    ${formatNumber(data.liquidity?.totalLiquidityUSD || 0)}
-                  </p>
-                </div>
-                <div className="p-3 bg-secondary/30 rounded-lg">
-                  <p className="text-xs text-muted-foreground mb-1">{t.lgnsReserve}</p>
-                  <p className="text-lg font-bold">{formatNumber(data.liquidity?.lgnsReserve || 0)}</p>
-                </div>
-                <div className="p-3 bg-secondary/30 rounded-lg">
-                  <p className="text-xs text-muted-foreground mb-1">{t.usdcReserve}</p>
-                  <p className="text-lg font-bold">${formatNumber(data.liquidity?.usdcReserve || 0)}</p>
-                </div>
-                <div className="p-3 bg-secondary/30 rounded-lg">
-                  <p className="text-xs text-muted-foreground mb-1">{t.lpPrice}</p>
-                  <p className="text-lg font-bold">${data.liquidity?.priceFromLP?.toFixed(4) || 'N/A'}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* User Portfolio */}
-          <Card className="bg-card border-border/60">
-            <CardHeader className="pb-3">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-lg flex items-center gap-2">
-                  <Wallet className="h-5 w-5 text-primary" />
-                  {t.portfolioInfo}
-                </CardTitle>
-                {walletAddress ? (
-                  <div className="flex items-center gap-2">
-                    <Badge variant="outline" className="font-mono">
-                      {formatAddress(walletAddress)}
-                    </Badge>
-                    <Button variant="ghost" size="sm" onClick={disconnectWallet}>
-                      {t.disconnect}
-                    </Button>
-                  </div>
-                ) : (
-                  <Button
-                    variant="default"
-                    size="sm"
-                    onClick={connectWallet}
-                    disabled={isConnecting}
-                    className="gap-2"
-                  >
-                    <Wallet className="h-4 w-4" />
-                    {isConnecting ? t.connecting : t.connectWallet}
-                  </Button>
-                )}
-              </div>
-            </CardHeader>
-            <CardContent>
-              {walletAddress ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="p-4 bg-primary/10 border border-primary/20 rounded-lg">
-                    <p className="text-xs text-muted-foreground mb-1">{t.myBalance}</p>
-                    <p className="text-2xl font-bold text-primary">{formatNumber(walletBalance || 0)} LGNS</p>
-                    <p className="text-sm text-muted-foreground">
-                      ${formatNumber((walletBalance || 0) * data.token.price)}
+              {data.liquidity?.totalLiquidityUSD != null ? (
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                  <div className="p-3 bg-cyan-500/10 border border-cyan-500/20 rounded-lg">
+                    <p className="text-xs text-muted-foreground mb-1">{t.totalLiquidity}</p>
+                    <p className="text-lg font-bold text-cyan-500">
+                      ${formatNumber(data.liquidity.totalLiquidityUSD)}
                     </p>
                   </div>
-                  <div className="p-4 bg-green-500/10 border border-green-500/20 rounded-lg">
-                    <p className="text-xs text-muted-foreground mb-1">{t.myStaked}</p>
-                    <p className="text-2xl font-bold text-green-500">- LGNS</p>
-                    <p className="text-xs text-muted-foreground">{language === 'ko' ? '스테이킹 조회 예정' : 'Coming soon'}</p>
+                  <div className="p-3 bg-secondary/30 rounded-lg">
+                    <p className="text-xs text-muted-foreground mb-1">{t.lgnsReserve}</p>
+                    <p className="text-lg font-bold">{formatNumber(data.liquidity.lgnsReserve || 0)}</p>
+                  </div>
+                  <div className="p-3 bg-secondary/30 rounded-lg">
+                    <p className="text-xs text-muted-foreground mb-1">{t.usdcReserve}</p>
+                    <p className="text-lg font-bold">${formatNumber(data.liquidity.usdcReserve || 0)}</p>
+                  </div>
+                  <div className="p-3 bg-secondary/30 rounded-lg">
+                    <p className="text-xs text-muted-foreground mb-1">{t.lpPrice}</p>
+                    <p className="text-lg font-bold">${data.liquidity.priceFromLP?.toFixed(4) || 'N/A'}</p>
                   </div>
                 </div>
               ) : (
-                <div className="p-8 text-center text-muted-foreground">
-                  <Wallet className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                  <p>{t.walletNotConnected}</p>
+                <div className="p-4 bg-secondary/20 rounded-lg text-center">
+                  <AlertCircle className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
+                  <p className="text-sm text-muted-foreground">{t.noData}</p>
                 </div>
               )}
             </CardContent>
@@ -747,24 +661,24 @@ export function StakingInfo() {
             </CardContent>
           </Card>
 
-          {/* Contract Addresses */}
+          {/* Contract Addresses - At the bottom */}
           <Card className="bg-card border-border/60">
             <CardHeader className="pb-3">
               <CardTitle className="text-lg flex items-center gap-2">
                 <ArrowRightLeft className="h-5 w-5 text-muted-foreground" />
-                {t.contractAddress}
+                {t.contractAddresses}
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {data.contracts && Object.entries(data.contracts).map(([key, address]) => (
+                {data.contracts && Object.entries(data.contracts).map(([key, addr]) => (
                   <div key={key} className="flex items-center justify-between p-2 bg-secondary/20 rounded-lg">
                     <div>
                       <p className="text-xs text-muted-foreground capitalize">{key}</p>
-                      <code className="text-sm font-mono">{formatAddress(address)}</code>
+                      <code className="text-sm font-mono">{formatAddress(addr)}</code>
                     </div>
                     <a
-                      href={`https://polygonscan.com/address/${address}`}
+                      href={`https://polygonscan.com/address/${addr}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="p-1.5 rounded hover:bg-secondary"

@@ -2,17 +2,17 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
 // Default menu items with IDs for local storage support
+// Updated: Removed membership, renamed calculator to staking
 const defaultMenuItems = [
   { id: 'menu-1', key: 'ai-analysis', href: '/ai-analysis', label_ko: 'AI 분석', label_en: 'AI Analysis', icon: 'Brain', sort_order: 1, is_visible: true, show_in_nav: true, show_in_footer: true },
-  { id: 'menu-2', key: 'analysis', href: '/analysis', label_ko: '분석', label_en: 'Analysis', icon: 'BarChart3', sort_order: 2, is_visible: true, show_in_nav: true, show_in_footer: true },
+  { id: 'menu-2', key: 'analysis', href: '/analysis', label_ko: '기술 분석', label_en: 'Technical Analysis', icon: 'BarChart3', sort_order: 2, is_visible: true, show_in_nav: true, show_in_footer: true },
   { id: 'menu-3', key: 'comparison', href: '/comparison', label_ko: '비교 분석', label_en: 'Comparison', icon: 'GitCompare', sort_order: 3, is_visible: true, show_in_nav: true, show_in_footer: true },
-  { id: 'menu-4', key: 'whale-monitor', href: '/whale-monitor', label_ko: '추적', label_en: 'Tracking', icon: 'Fish', sort_order: 4, is_visible: true, show_in_nav: true, show_in_footer: true },
-  { id: 'menu-5', key: 'calculator', href: '/calculator', label_ko: '계산기', label_en: 'Calculator', icon: 'Calculator', sort_order: 5, is_visible: true, show_in_nav: true, show_in_footer: true },
+  { id: 'menu-4', key: 'whale-monitor', href: '/whale-monitor', label_ko: '온체인 분석', label_en: 'On-Chain Analysis', icon: 'Fish', sort_order: 4, is_visible: true, show_in_nav: true, show_in_footer: true },
+  { id: 'menu-5', key: 'staking', href: '/calculator', label_ko: '스테이킹', label_en: 'Staking', icon: 'Calculator', sort_order: 5, is_visible: true, show_in_nav: true, show_in_footer: true },
   { id: 'menu-6', key: 'bookmarks', href: '/bookmarks', label_ko: '참고링크', label_en: 'Bookmarks', icon: 'BookmarkCheck', sort_order: 6, is_visible: true, show_in_nav: true, show_in_footer: true },
   { id: 'menu-7', key: 'docs', href: '/docs', label_ko: '문서', label_en: 'Docs', icon: 'BookOpen', sort_order: 7, is_visible: true, show_in_nav: true, show_in_footer: true },
   { id: 'menu-8', key: 'community', href: '/community', label_ko: '커뮤니티', label_en: 'Community', icon: 'Users', sort_order: 8, is_visible: true, show_in_nav: true, show_in_footer: true },
-  { id: 'menu-9', key: 'membership', href: '/membership', label_ko: '멤버십', label_en: 'Membership', icon: 'Crown', sort_order: 9, is_visible: true, show_in_nav: true, show_in_footer: true },
-  { id: 'menu-10', key: 'announcements', href: '/announcements', label_ko: '공지', label_en: 'Announcements', icon: 'Bell', sort_order: 10, is_visible: true, show_in_nav: true, show_in_footer: true },
+  { id: 'menu-9', key: 'announcements', href: '/announcements', label_ko: '공지', label_en: 'Announcements', icon: 'Bell', sort_order: 9, is_visible: true, show_in_nav: true, show_in_footer: true },
 ];
 
 // In-memory cache for menu items

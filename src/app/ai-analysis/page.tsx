@@ -15,7 +15,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Brain, RefreshCw, Clock, ArrowLeft, BarChart3, Info, TrendingUp, Activity, Zap, Gauge, Droplets, ArrowUpRight, ArrowDownRight, Target, Waves, Crosshair, Sparkles } from 'lucide-react';
+import { Brain, RefreshCw, Clock, ArrowLeft, BarChart3, Info, TrendingUp, Activity, Zap, Gauge, Droplets, ArrowUpRight, ArrowDownRight, Target, Waves, Crosshair, Sparkles, Shield, AlertTriangle } from 'lucide-react';
 import Link from 'next/link';
 import { ProtectedPage } from '@/hooks/usePagePermission';
 
@@ -185,8 +185,8 @@ export default function AIAnalysisPage() {
 
   const texts = {
     ko: {
-      title: 'LGNS AI 시장 분석',
-      subtitle: 'AI 기반 실시간 LGNS 토큰 시장 분석 및 전망',
+      title: 'AI 시장 분석',
+      subtitle: 'AI 기반 실시간 시장 분석 및 전망',
       back: '홈으로',
       viewAnalysis: '상세 분석 보기',
       lastUpdated: '마지막 업데이트',
@@ -257,10 +257,28 @@ export default function AIAnalysisPage() {
       bearishTrend: '하락 추세',
       mixedTrend: '혼조세',
       transactions: '거래',
+      // New AI features
+      aiRiskAssessment: 'AI 리스크 평가',
+      aiRiskDesc: '시장 데이터 기반 투자 위험도 분석',
+      riskLevel: '위험 수준',
+      riskLow: '낮음',
+      riskMedium: '보통',
+      riskHigh: '높음',
+      riskVeryHigh: '매우 높음',
+      volatilityRisk: '변동성 위험',
+      liquidityRisk: '유동성 위험',
+      marketRisk: '시장 위험',
+      aiPriceTargets: 'AI 가격 예측',
+      aiPriceTargetsDesc: 'AI 기반 단기/중기 가격 목표',
+      shortTerm: '단기 (24H)',
+      mediumTerm: '중기 (7D)',
+      supportLevel: '지지선',
+      resistanceLevel: '저항선',
+      aiConfidence: 'AI 신뢰도',
     },
     en: {
-      title: 'LGNS AI Market Analysis',
-      subtitle: 'AI-powered real-time LGNS token market analysis and outlook',
+      title: 'AI Market Analysis',
+      subtitle: 'AI-powered real-time market analysis and outlook',
       back: 'Home',
       viewAnalysis: 'View Detailed Analysis',
       lastUpdated: 'Last Updated',
@@ -331,6 +349,24 @@ export default function AIAnalysisPage() {
       bearishTrend: 'Bearish',
       mixedTrend: 'Mixed',
       transactions: 'Txns',
+      // New AI features
+      aiRiskAssessment: 'AI Risk Assessment',
+      aiRiskDesc: 'Investment risk analysis based on market data',
+      riskLevel: 'Risk Level',
+      riskLow: 'Low',
+      riskMedium: 'Medium',
+      riskHigh: 'High',
+      riskVeryHigh: 'Very High',
+      volatilityRisk: 'Volatility Risk',
+      liquidityRisk: 'Liquidity Risk',
+      marketRisk: 'Market Risk',
+      aiPriceTargets: 'AI Price Targets',
+      aiPriceTargetsDesc: 'AI-based short/medium term price targets',
+      shortTerm: 'Short-term (24H)',
+      mediumTerm: 'Medium-term (7D)',
+      supportLevel: 'Support',
+      resistanceLevel: 'Resistance',
+      aiConfidence: 'AI Confidence',
     },
   };
 
@@ -921,6 +957,153 @@ export default function AIAnalysisPage() {
               <div className="space-y-6">
                 {/* Enhanced Market Prediction */}
                 <MarketPrediction data={tokenData} loading={loading} />
+
+                {/* AI Price Targets & Risk Assessment */}
+                {tokenData && indicators && (
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    {/* AI Price Targets */}
+                    <Card className="bg-zinc-900 border-zinc-700">
+                      <CardHeader>
+                        <CardTitle className="flex items-center gap-2 text-base">
+                          <Target className="h-5 w-5 text-cyan-400" />
+                          {t.aiPriceTargets}
+                        </CardTitle>
+                        <CardDescription className="text-xs">{t.aiPriceTargetsDesc}</CardDescription>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        {(() => {
+                          const price = parseFloat(tokenData.priceUsd);
+                          const volatility = Math.abs(tokenData.priceChange24h || 0) / 100;
+                          const support24h = price * (1 - Math.max(volatility * 0.5, 0.02));
+                          const resistance24h = price * (1 + Math.max(volatility * 0.5, 0.02));
+                          const support7d = price * (1 - Math.max(volatility * 1.5, 0.05));
+                          const resistance7d = price * (1 + Math.max(volatility * 1.5, 0.05));
+                          const confidence = Math.max(40, 85 - volatility * 200);
+
+                          return (
+                            <>
+                              {/* Short-term (24H) */}
+                              <div className="p-3 bg-zinc-800/50 rounded-lg">
+                                <h4 className="text-xs font-medium text-zinc-400 mb-2">{t.shortTerm}</h4>
+                                <div className="grid grid-cols-2 gap-3">
+                                  <div className="text-center">
+                                    <p className="text-[10px] text-zinc-500">{t.supportLevel}</p>
+                                    <p className="text-sm font-bold text-red-400">${support24h.toFixed(4)}</p>
+                                  </div>
+                                  <div className="text-center">
+                                    <p className="text-[10px] text-zinc-500">{t.resistanceLevel}</p>
+                                    <p className="text-sm font-bold text-green-400">${resistance24h.toFixed(4)}</p>
+                                  </div>
+                                </div>
+                              </div>
+                              {/* Medium-term (7D) */}
+                              <div className="p-3 bg-zinc-800/50 rounded-lg">
+                                <h4 className="text-xs font-medium text-zinc-400 mb-2">{t.mediumTerm}</h4>
+                                <div className="grid grid-cols-2 gap-3">
+                                  <div className="text-center">
+                                    <p className="text-[10px] text-zinc-500">{t.supportLevel}</p>
+                                    <p className="text-sm font-bold text-red-400">${support7d.toFixed(4)}</p>
+                                  </div>
+                                  <div className="text-center">
+                                    <p className="text-[10px] text-zinc-500">{t.resistanceLevel}</p>
+                                    <p className="text-sm font-bold text-green-400">${resistance7d.toFixed(4)}</p>
+                                  </div>
+                                </div>
+                              </div>
+                              {/* Confidence */}
+                              <div className="flex items-center justify-between text-xs">
+                                <span className="text-zinc-500">{t.aiConfidence}</span>
+                                <span className={`font-medium ${confidence >= 70 ? 'text-green-400' : confidence >= 50 ? 'text-amber-400' : 'text-red-400'}`}>
+                                  {confidence.toFixed(0)}%
+                                </span>
+                              </div>
+                            </>
+                          );
+                        })()}
+                      </CardContent>
+                    </Card>
+
+                    {/* AI Risk Assessment */}
+                    <Card className="bg-zinc-900 border-zinc-700">
+                      <CardHeader>
+                        <CardTitle className="flex items-center gap-2 text-base">
+                          <Shield className="h-5 w-5 text-amber-400" />
+                          {t.aiRiskAssessment}
+                        </CardTitle>
+                        <CardDescription className="text-xs">{t.aiRiskDesc}</CardDescription>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        {(() => {
+                          const volatility = Math.abs(tokenData.priceChange24h || 0);
+                          const liquidityRatio = (tokenData.liquidity?.usd || 0) / 350000000;
+                          const buyRatio = tokenData.txns?.h24 ? tokenData.txns.h24.buys / (tokenData.txns.h24.buys + tokenData.txns.h24.sells) : 0.5;
+
+                          const volatilityRisk = Math.min(100, volatility * 8);
+                          const liqRisk = Math.max(0, 100 - liquidityRatio * 100);
+                          const marketRisk = Math.abs(buyRatio - 0.5) * 200;
+
+                          const overallRisk = (volatilityRisk * 0.4 + liqRisk * 0.3 + marketRisk * 0.3);
+                          const riskLabel = overallRisk < 25 ? (language === 'ko' ? t.riskLow : t.riskLow) :
+                                           overallRisk < 50 ? t.riskMedium :
+                                           overallRisk < 75 ? t.riskHigh : t.riskVeryHigh;
+                          const riskColor = overallRisk < 25 ? 'text-green-400' :
+                                           overallRisk < 50 ? 'text-amber-400' :
+                                           overallRisk < 75 ? 'text-orange-400' : 'text-red-400';
+
+                          return (
+                            <>
+                              {/* Overall Risk */}
+                              <div className="text-center p-3 bg-zinc-800/50 rounded-lg">
+                                <p className="text-xs text-zinc-500 mb-1">{t.riskLevel}</p>
+                                <p className={`text-2xl font-bold ${riskColor}`}>{riskLabel}</p>
+                                <div className="mt-2 h-2 bg-zinc-700 rounded-full overflow-hidden">
+                                  <div
+                                    className={`h-full transition-all ${
+                                      overallRisk < 25 ? 'bg-green-500' :
+                                      overallRisk < 50 ? 'bg-amber-500' :
+                                      overallRisk < 75 ? 'bg-orange-500' : 'bg-red-500'
+                                    }`}
+                                    style={{ width: `${overallRisk}%` }}
+                                  />
+                                </div>
+                              </div>
+                              {/* Risk Breakdown */}
+                              <div className="space-y-2">
+                                <div className="flex items-center justify-between text-xs">
+                                  <span className="text-zinc-500 flex items-center gap-1">
+                                    <AlertTriangle className="h-3 w-3" />
+                                    {t.volatilityRisk}
+                                  </span>
+                                  <span className={volatilityRisk > 50 ? 'text-red-400' : 'text-green-400'}>
+                                    {volatilityRisk.toFixed(0)}%
+                                  </span>
+                                </div>
+                                <div className="flex items-center justify-between text-xs">
+                                  <span className="text-zinc-500 flex items-center gap-1">
+                                    <Droplets className="h-3 w-3" />
+                                    {t.liquidityRisk}
+                                  </span>
+                                  <span className={liqRisk > 50 ? 'text-red-400' : 'text-green-400'}>
+                                    {liqRisk.toFixed(0)}%
+                                  </span>
+                                </div>
+                                <div className="flex items-center justify-between text-xs">
+                                  <span className="text-zinc-500 flex items-center gap-1">
+                                    <Activity className="h-3 w-3" />
+                                    {t.marketRisk}
+                                  </span>
+                                  <span className={marketRisk > 50 ? 'text-red-400' : 'text-green-400'}>
+                                    {marketRisk.toFixed(0)}%
+                                  </span>
+                                </div>
+                              </div>
+                            </>
+                          );
+                        })()}
+                      </CardContent>
+                    </Card>
+                  </div>
+                )}
 
                 {/* Original AI Prediction & Fear/Greed */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

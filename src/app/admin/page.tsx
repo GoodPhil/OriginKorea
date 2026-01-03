@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Switch } from '@/components/ui/switch';
 import {
   ArrowLeft,
   Settings,
@@ -29,9 +28,9 @@ import {
   ChevronRight,
   Globe,
   Layers,
-  AlertTriangle,
   ExternalLink,
 } from 'lucide-react';
+import { MaintenanceToggle } from '@/components/MaintenanceToggle';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { LanguageToggle } from '@/components/LanguageToggle';
@@ -60,7 +59,6 @@ export default function AdminPage() {
   const [refreshing, setRefreshing] = useState(false);
   const [stats, setStats] = useState<Stats>({ totalUsers: 0, admins: 0, pendingRegistrations: 0, totalBookmarks: 0 });
   const [loadingStats, setLoadingStats] = useState(true);
-  const [maintenanceMode, setMaintenanceMode] = useState(false);
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
 
   // Update time every second
@@ -107,9 +105,6 @@ export default function AdminPage() {
   useEffect(() => {
     if (isAdmin) {
       fetchStats();
-      // Load maintenance mode from localStorage
-      const saved = localStorage.getItem('maintenanceMode');
-      if (saved) setMaintenanceMode(saved === 'true');
     }
   }, [isAdmin]);
 
@@ -136,12 +131,6 @@ export default function AdminPage() {
     setRefreshing(true);
     await fetchStats();
     setRefreshing(false);
-  };
-
-  const toggleMaintenanceMode = () => {
-    const newValue = !maintenanceMode;
-    setMaintenanceMode(newValue);
-    localStorage.setItem('maintenanceMode', String(newValue));
   };
 
   if (loading) {
@@ -195,6 +184,17 @@ export default function AdminPage() {
       borderColor: 'hover:border-amber-500/50',
       badge: stats.pendingRegistrations > 0 ? stats.pendingRegistrations.toString() : null,
       badgeColor: 'bg-amber-500',
+    },
+    {
+      title: { ko: '스테이킹 설정', en: 'Staking Settings' },
+      description: { ko: '컨트랙트 주소 및 수동 데이터 관리', en: 'Contract addresses & manual data' },
+      icon: TrendingUp,
+      href: '/admin/staking',
+      color: 'text-red-500',
+      bgColor: 'bg-red-500/10',
+      borderColor: 'hover:border-red-500/50',
+      badge: { ko: '새로운', en: 'New' },
+      badgeColor: 'bg-red-500',
     },
     {
       title: { ko: '북마크 관리', en: 'Manage Bookmarks' },
@@ -476,30 +476,10 @@ export default function AdminPage() {
               })}
             </div>
 
-            {/* Maintenance Mode - Compact */}
-            <Card className="mt-4 bg-card border-border/60">
-              <CardContent className="p-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <AlertTriangle className={`h-5 w-5 ${maintenanceMode ? 'text-red-500' : 'text-muted-foreground'}`} />
-                    <div>
-                      <p className="font-medium">
-                        {language === 'ko' ? '사이트 점검 모드' : 'Maintenance Mode'}
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        {maintenanceMode
-                          ? (language === 'ko' ? '점검 중 - 일반 사용자 접근 제한' : 'Under maintenance - Access restricted')
-                          : (language === 'ko' ? '정상 운영 중' : 'Normal operation')}
-                      </p>
-                    </div>
-                  </div>
-                  <Switch
-                    checked={maintenanceMode}
-                    onCheckedChange={toggleMaintenanceMode}
-                  />
-                </div>
-              </CardContent>
-            </Card>
+            {/* Maintenance Mode - Full Component */}
+            <div className="mt-4">
+              <MaintenanceToggle />
+            </div>
           </div>
 
           {/* Sidebar - Activity & System Status */}

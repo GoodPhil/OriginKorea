@@ -188,10 +188,10 @@ export default function InvitePage() {
 
             {/* Content */}
             <div className="p-8 sm:p-10 text-center">
-              {/* Elegant Horse Image */}
+              {/* Elegant Horse Image from GitHub */}
               <div className="mb-8">
                 <img
-                  src="/images/red-horse.png"
+                  src="https://raw.githubusercontent.com/GoodPhil/OriginKorea/main/public/images/red-horse.png"
                   alt="2026 Year of the Horse"
                   className="w-full max-w-sm mx-auto rounded-xl"
                   loading="lazy"
