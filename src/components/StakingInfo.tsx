@@ -30,13 +30,23 @@ interface StakingData {
     decimals: number;
     totalSupply: number;
     price: number;
+    priceChange24h?: number;
     marketCap: number;
   };
   staking: {
     totalStaked: number | null;
     totalStakedUSD: number | null;
     stakingRatio: number | null;
+    treasuryBalance?: number;
+    treasuryBalanceUSD?: number;
+    contractAddress?: string;
+    isLive?: boolean;
     note?: string;
+  };
+  treasury?: {
+    address: string;
+    balance: number;
+    balanceUSD: number;
   };
   yields: {
     per8Hours: number;
@@ -49,7 +59,13 @@ interface StakingData {
   network: {
     name: string;
     chainId: number;
-    rpc: string;
+    blockNumber?: number;
+  };
+  contracts?: {
+    lgnsToken: string;
+    staking: string;
+    treasury: string;
+    turbine: string;
   };
 }
 
@@ -76,6 +92,8 @@ export function StakingInfo() {
       totalStaked: '총 스테이킹',
       stakingRatio: '스테이킹 비율',
       tvl: 'TVL',
+      treasury: '트레저리',
+      treasuryBalance: '트레저리 잔액',
       per8Hours: '8시간당',
       daily: '일일',
       weekly: '주간',
@@ -83,14 +101,17 @@ export function StakingInfo() {
       estimatedAPY: '예상 연간 APY',
       compoundFrequency: '복리 주기',
       network: '네트워크',
+      blockNumber: '블록 번호',
       contractAddress: '컨트랙트 주소',
+      stakingContract: '스테이킹 컨트랙트',
       viewOnPolygonscan: 'Polygonscan에서 보기',
       dataFromBlockchain: '블록체인에서 직접 조회',
       estimatedData: '추정 데이터',
       liveData: '실시간 데이터',
+      liveFromContract: '컨트랙트 실시간 조회',
       error: '데이터 조회 실패',
       retry: '재시도',
-      notConfigured: '스테이킹 컨트랙트 주소가 설정되지 않았습니다',
+      notConfigured: '스테이킹 데이터를 조회할 수 없습니다',
     },
     en: {
       title: 'Staking Information',
@@ -107,6 +128,8 @@ export function StakingInfo() {
       totalStaked: 'Total Staked',
       stakingRatio: 'Staking Ratio',
       tvl: 'TVL',
+      treasury: 'Treasury',
+      treasuryBalance: 'Treasury Balance',
       per8Hours: 'Per 8 Hours',
       daily: 'Daily',
       weekly: 'Weekly',
@@ -114,14 +137,17 @@ export function StakingInfo() {
       estimatedAPY: 'Estimated Annual APY',
       compoundFrequency: 'Compound Frequency',
       network: 'Network',
+      blockNumber: 'Block Number',
       contractAddress: 'Contract Address',
+      stakingContract: 'Staking Contract',
       viewOnPolygonscan: 'View on Polygonscan',
       dataFromBlockchain: 'Direct from blockchain',
       estimatedData: 'Estimated Data',
       liveData: 'Live Data',
+      liveFromContract: 'Live from Contract',
       error: 'Failed to load data',
       retry: 'Retry',
-      notConfigured: 'Staking contract address not configured',
+      notConfigured: 'Unable to fetch staking data',
     },
   };
 
@@ -167,7 +193,6 @@ export function StakingInfo() {
           network: {
             name: 'Polygon',
             chainId: 137,
-            rpc: 'polygon-rpc.com',
           },
         });
         setLastUpdated(new Date());
