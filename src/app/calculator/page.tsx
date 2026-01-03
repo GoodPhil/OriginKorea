@@ -19,7 +19,7 @@ const stakingPackages = [
   { days: 90, baseAPY: 0.20, name: { ko: '스탠다드', en: 'Standard' }, color: 'bg-green-500' },
   { days: 180, baseAPY: 0.20, name: { ko: '프리미엄', en: 'Premium' }, color: 'bg-purple-500' },
   { days: 365, baseAPY: 0.20, name: { ko: '연간', en: 'Annual' }, color: 'bg-orange-500' },
-  { days: 600, baseAPY: 0.20, name: { ko: '장기', en: 'Long-term' }, color: 'bg-red-500', daiOption: true },
+  { days: 600, baseAPY: 0.20, name: { ko: '장기', en: 'Long-term' }, color: 'bg-red-500' },
 ];
 
 // Quick amount presets
@@ -205,7 +205,7 @@ export default function CalculatorPage() {
   const [apyPer8Hours, setApyPer8Hours] = useState(0.2); // Default 0.2% per 8 hours
   const [manualAPY, setManualAPY] = useState(false);
   const [selectedPackage, setSelectedPackage] = useState<number | null>(1);
-  const [rewardType, setRewardType] = useState<'lgns' | 'dai'>('lgns');
+
 
   // Calculate compound interest
   const calculateRewards = () => {
@@ -304,12 +304,6 @@ export default function CalculatorPage() {
                         : 'border-border/40 bg-secondary/30 hover:border-primary/50 hover:bg-secondary/50'
                     }`}
                   >
-                    {pkg.daiOption && (
-                      <Badge className="absolute -top-2 -right-2 text-[12px] bg-green-500">
-                        <DollarSign className="h-3 w-3 mr-0.5" />
-                        DAI
-                      </Badge>
-                    )}
                     <div className={`w-2 h-2 rounded-full ${pkg.color} mx-auto mb-2`} />
                     <div className="font-bold text-lg">{pkg.days}{language === 'ko' ? '일' : 'd'}</div>
                     <div className="text-xs text-muted-foreground mb-2">{pkg.name[language]}</div>
@@ -514,46 +508,6 @@ export default function CalculatorPage() {
                 </CardContent>
               </Card>
 
-              {/* DAI Option (only for 600 days) */}
-              {stakingDays >= 600 && (
-                <Card className="bg-green-50 dark:bg-green-950/30 border-green-500/40">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-green-500">
-                      <DollarSign className="h-5 w-5" />
-                      {t.daiOption}
-                    </CardTitle>
-                    <CardDescription>{t.daiOptionDesc}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex gap-3">
-                      <button
-                        type="button"
-                        onClick={() => setRewardType('lgns')}
-                        className={`flex-1 p-3 rounded-lg border-2 transition-all ${
-                          rewardType === 'lgns'
-                            ? 'border-primary bg-primary/10'
-                            : 'border-border hover:border-primary/50'
-                        }`}
-                      >
-                        <div className="font-medium">{t.lgnsReward}</div>
-                        <div className="text-sm text-muted-foreground">LGNS Token</div>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setRewardType('dai')}
-                        className={`flex-1 p-3 rounded-lg border-2 transition-all ${
-                          rewardType === 'dai'
-                            ? 'border-green-500 bg-green-500/10'
-                            : 'border-border hover:border-green-500/50'
-                        }`}
-                      >
-                        <div className="font-medium text-green-500">{t.daiReward}</div>
-                        <div className="text-sm text-muted-foreground">Stablecoin</div>
-                      </button>
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
             </div>
 
             {/* Results */}
@@ -582,18 +536,30 @@ export default function CalculatorPage() {
                     <div className="p-4 rounded-lg bg-secondary/50 border border-border">
                       <div className="text-sm text-muted-foreground mb-1">{t.stakingAmountLabel}</div>
                       <div className="text-2xl font-bold">{stakingAmount.toLocaleString()} LGNS</div>
-                      <div className="text-sm font-semibold text-cyan-500 dark:text-cyan-400 mt-1">
-                        ≈ {formatKRW(stakingAmount * lgnsPrice, exchangeRate)}
+                      <div className="flex flex-wrap items-center gap-2 mt-1">
+                        <span className="text-sm font-semibold text-green-500">
+                          ${(stakingAmount * lgnsPrice).toLocaleString('en-US', { maximumFractionDigits: 0 })}
+                        </span>
+                        <span className="text-sm text-muted-foreground">|</span>
+                        <span className="text-sm font-semibold text-cyan-500 dark:text-cyan-400">
+                          {formatKRW(stakingAmount * lgnsPrice, exchangeRate)}
+                        </span>
                       </div>
                     </div>
 
                     <div className="p-4 rounded-lg bg-primary/10 border border-primary/30">
                       <div className="text-sm text-muted-foreground mb-1">{t.expectedReward}</div>
                       <div className="text-3xl font-bold gradient-text">
-                        +{rewards.toLocaleString('en-US', { maximumFractionDigits: 2 })} {rewardType === 'dai' && stakingDays >= 600 ? 'DAI' : 'LGNS'}
+                        +{rewards.toLocaleString('en-US', { maximumFractionDigits: 2 })} LGNS
                       </div>
-                      <div className="text-sm font-semibold text-cyan-500 dark:text-cyan-400 mt-1">
-                        ≈ +{formatKRW(rewards * lgnsPrice, exchangeRate)}
+                      <div className="flex flex-wrap items-center gap-2 mt-1">
+                        <span className="text-sm font-semibold text-green-500">
+                          +${(rewards * lgnsPrice).toLocaleString('en-US', { maximumFractionDigits: 0 })}
+                        </span>
+                        <span className="text-sm text-muted-foreground">|</span>
+                        <span className="text-sm font-semibold text-cyan-500 dark:text-cyan-400">
+                          +{formatKRW(rewards * lgnsPrice, exchangeRate)}
+                        </span>
                       </div>
                       <div className="text-sm text-muted-foreground mt-2">
                         {t.totalCompound} {stakingDays * 3}{t.times}
@@ -603,10 +569,16 @@ export default function CalculatorPage() {
                     <div className="p-4 rounded-lg bg-accent/10 border border-accent/30">
                       <div className="text-sm text-muted-foreground mb-1">{t.totalReceive}</div>
                       <div className="text-3xl font-bold">
-                        {finalAmount.toLocaleString('en-US', { maximumFractionDigits: 2 })} {rewardType === 'dai' && stakingDays >= 600 ? 'DAI' : 'LGNS'}
+                        {finalAmount.toLocaleString('en-US', { maximumFractionDigits: 2 })} LGNS
                       </div>
-                      <div className="text-sm font-semibold text-cyan-500 dark:text-cyan-400 mt-1">
-                        ≈ {formatKRW(finalAmount * lgnsPrice, exchangeRate)}
+                      <div className="flex flex-wrap items-center gap-2 mt-1">
+                        <span className="text-sm font-semibold text-green-500">
+                          ${(finalAmount * lgnsPrice).toLocaleString('en-US', { maximumFractionDigits: 0 })}
+                        </span>
+                        <span className="text-sm text-muted-foreground">|</span>
+                        <span className="text-sm font-semibold text-cyan-500 dark:text-cyan-400">
+                          {formatKRW(finalAmount * lgnsPrice, exchangeRate)}
+                        </span>
                       </div>
                       <div className="text-sm text-green-500 mt-2">
                         +{totalAPY.toFixed(2)}% {t.totalYield}
@@ -641,7 +613,6 @@ export default function CalculatorPage() {
                     <div className="flex gap-2 flex-wrap">
                       <Badge variant="outline" className="text-xs">{t.compound8Hours}</Badge>
                       <Badge variant="outline" className="text-xs">{t.realtimeCalc}</Badge>
-                      {stakingDays >= 600 && <Badge className="text-xs bg-green-500">{t.daiAvailable}</Badge>}
                     </div>
                     <p className="text-xs text-muted-foreground mt-3">* {t.note}</p>
                   </div>
@@ -707,9 +678,6 @@ export default function CalculatorPage() {
                             <div className="flex items-center gap-2">
                               <div className={`w-2 h-2 rounded-full ${pkg.color}`} />
                               <span className="font-medium">{pkg.name[language]}</span>
-                              {pkg.daiOption && (
-                                <Badge className="text-[12px] bg-green-500 px-1">DAI</Badge>
-                              )}
                             </div>
                           </td>
                           <td className="px-4 py-3 text-center">{pkg.days}{language === 'ko' ? '일' : 'd'}</td>

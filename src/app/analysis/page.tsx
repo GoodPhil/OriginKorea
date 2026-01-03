@@ -2,23 +2,86 @@
 
 import { ProtectedPage } from '@/hooks/usePagePermission';
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, Suspense, memo } from 'react';
+import dynamic from 'next/dynamic';
 import { Navigation } from '@/components/Navigation';
 import { Footer } from '@/components/Footer';
-import { PriceChart } from '@/components/PriceChart';
-import { TokenInfoCard } from '@/components/TokenInfoCard';
-// OnChainAnalysis moved to whale-monitor page
-import { RSIGauge } from '@/components/RSIGauge';
-import { MACDChart } from '@/components/MACDChart';
-import { BollingerBandsChart } from '@/components/BollingerBandsChart';
-import { StochasticChart } from '@/components/StochasticChart';
-import { ATRChart } from '@/components/ATRChart';
-import { WilliamsRChart } from '@/components/WilliamsRChart';
-import { CCIChart } from '@/components/CCIChart';
-import { OBVChart } from '@/components/OBVChart';
-import { ADXChart } from '@/components/ADXChart';
-import { IchimokuChart } from '@/components/IchimokuChart';
-import { ParabolicSARChart } from '@/components/ParabolicSARChart';
+import { Skeleton } from '@/components/ui/skeleton';
+
+// Chart loading placeholder component
+const ChartLoading = memo(function ChartLoading() {
+  return (
+    <div className="h-[300px] w-full bg-secondary/30 rounded-lg animate-pulse flex items-center justify-center">
+      <div className="text-muted-foreground text-sm">Loading chart...</div>
+    </div>
+  );
+});
+
+// Dynamic imports with lazy loading for chart components
+const PriceChart = dynamic(() => import('@/components/PriceChart').then(mod => ({ default: mod.PriceChart })), {
+  loading: () => <ChartLoading />,
+  ssr: false,
+});
+
+const TokenInfoCard = dynamic(() => import('@/components/TokenInfoCard').then(mod => ({ default: mod.TokenInfoCard })), {
+  loading: () => <Skeleton className="h-[200px] w-full" />,
+  ssr: false,
+});
+
+const RSIGauge = dynamic(() => import('@/components/RSIGauge').then(mod => ({ default: mod.RSIGauge })), {
+  loading: () => <ChartLoading />,
+  ssr: false,
+});
+
+const MACDChart = dynamic(() => import('@/components/MACDChart').then(mod => ({ default: mod.MACDChart })), {
+  loading: () => <ChartLoading />,
+  ssr: false,
+});
+
+const BollingerBandsChart = dynamic(() => import('@/components/BollingerBandsChart').then(mod => ({ default: mod.BollingerBandsChart })), {
+  loading: () => <ChartLoading />,
+  ssr: false,
+});
+
+const StochasticChart = dynamic(() => import('@/components/StochasticChart').then(mod => ({ default: mod.StochasticChart })), {
+  loading: () => <ChartLoading />,
+  ssr: false,
+});
+
+const ATRChart = dynamic(() => import('@/components/ATRChart').then(mod => ({ default: mod.ATRChart })), {
+  loading: () => <ChartLoading />,
+  ssr: false,
+});
+
+const WilliamsRChart = dynamic(() => import('@/components/WilliamsRChart').then(mod => ({ default: mod.WilliamsRChart })), {
+  loading: () => <ChartLoading />,
+  ssr: false,
+});
+
+const CCIChart = dynamic(() => import('@/components/CCIChart').then(mod => ({ default: mod.CCIChart })), {
+  loading: () => <ChartLoading />,
+  ssr: false,
+});
+
+const OBVChart = dynamic(() => import('@/components/OBVChart').then(mod => ({ default: mod.OBVChart })), {
+  loading: () => <ChartLoading />,
+  ssr: false,
+});
+
+const ADXChart = dynamic(() => import('@/components/ADXChart').then(mod => ({ default: mod.ADXChart })), {
+  loading: () => <ChartLoading />,
+  ssr: false,
+});
+
+const IchimokuChart = dynamic(() => import('@/components/IchimokuChart').then(mod => ({ default: mod.IchimokuChart })), {
+  loading: () => <ChartLoading />,
+  ssr: false,
+});
+
+const ParabolicSARChart = dynamic(() => import('@/components/ParabolicSARChart').then(mod => ({ default: mod.ParabolicSARChart })), {
+  loading: () => <ChartLoading />,
+  ssr: false,
+});
 
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useExchangeRate, formatKRW } from '@/hooks/useExchangeRate';
